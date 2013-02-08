@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#coding=UTF-8
+#coding:UTF-8
 #author: Andrey Kutuzov; html2fb library by Chris Clark (https://code.google.com/p/html2fb/) is used
 #license: GNU GPL v3
 #Extracting TrV articles into one HTML and one FB2
