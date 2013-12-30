@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#coding=UTF-8
+#coding: utf-8
 #author: Andrey Kutuzov; html2fb library by Chris Clark (https://code.google.com/p/html2fb/) is used
 #license: GNU GPL v3
 #Extracting TrV articles into one HTML and one FB2
@@ -14,7 +14,7 @@ def trving(x):
 	#Finding directory with articles...
 	catalogue = x[21:]
 	
-	#os.chdir('/var/www/upload_data')
+	os.chdir('/var/www/upload_data')
 	
 	#Actually downloading pages...
 	subprocess.call(['wget', '-r', '-l 1', '--include-directories=%s,uploads' % catalogue, '-nd', '-E', '--random-wait', '-np', '-p', '-k', x])
@@ -58,17 +58,18 @@ def trving(x):
 	o.write(trv)
 	o.close()
 	# print "Преобразование в HTML завершено. Забирайте файл trv(дата выпуска).html и все картинки из этого каталога и наслаждайтесь."
+	trv = codecs.open(htmlname,'r','utf-8').read()
 
 	#Converting to FB2...
 	fb2name='trv'+catalogue+'.fb2'
 	params = h2fb.default_params.copy()
 	params['data'] = trv.encode('utf-8')
 	data=h2fb.MyHTMLParser().process(params)
-	text = data.decode('utf-8')
-	fb2 = codecs.open(fb2name,'w','utf-8')
+	text = data
+	fb2 = open(fb2name,'w')
 	fb2.write(text)
 	fb2.close()
-	#print "Преобразование в fb2 завершено. Забирайте файл trv(дата выпуска).fb2 и наслаждайтесь.".encode('utf-8')
+	#print "Преобразование в fb2 завершено. Забирайте файл trv(дата выпуска).fb2 и наслаждайтесь."
 
 	#Deleting images...
 	listing = os.listdir('.')
@@ -81,6 +82,5 @@ def trving(x):
 	listing_html = [i for i in listing if i.endswith('.html')]
 	for i in listing_html:
 	    os.remove(i)
-
-	#Compressing FB2 file...
+	
 	subprocess.call(['gzip', fb2name])
