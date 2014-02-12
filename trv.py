@@ -17,7 +17,7 @@ def trving(x):
 	os.chdir('/var/www/upload_data')
 	
 	#Actually downloading pages...
-	subprocess.call(['wget', '-r', '-l 1', '--include-directories=%s,uploads' % catalogue, '-nd', '-E', '--random-wait', '-np', '-p', '-k', x])
+	subprocess.call(['wget', '-r', '-l 1','--restrict-file-names=nocontrol', '--include-directories=%s,uploads' % catalogue, '-nd', '-E', '--random-wait', '-np', '-p', '-k', x])
 
 	#Cleaning up a bit...
 	os.remove('index.html')
