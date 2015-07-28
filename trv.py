@@ -17,7 +17,7 @@ def trving(x):
 	os.chdir('/var/www/upload_data')
 	
 	#Actually downloading pages...
-	subprocess.call(['wget', '-r', '-l 1','--restrict-file-names=nocontrol', '--include-directories=%s,uploads' % catalogue, '-nd', '-E', '--random-wait', '-np', '-p', '-k', x])
+	subprocess.call(['wget', '-r', '-l 1','--restrict-file-names=nocontrol', '--include-directories=%s,uploads,trv-science.ru/uploads' % catalogue, '-nd', '-E', '--random-wait', '-np', '-p', '-k', '-H', x])
 
 	#Cleaning up a bit...
 	os.remove('index.html')
@@ -30,8 +30,14 @@ def trving(x):
 	os.rename("index.html.1.5.html","index.html.1.05.html")
 	os.rename("index.html.1.6.html","index.html.1.06.html")
 	os.rename("index.html.1.7.html","index.html.1.07.html")
-	os.rename("index.html.1.8.html","index.html.1.08.html")
-	os.rename("index.html.1.9.html","index.html.1.09.html")
+	try:
+	    os.rename("index.html.1.8.html","index.html.1.08.html")
+	except:
+	    pass
+	try:
+	    os.rename("index.html.1.9.html","index.html.1.09.html")
+	except:
+	    pass
 
 	#Creating list of pages to process...
 	listing = os.listdir('.')
@@ -49,6 +55,7 @@ def trving(x):
 	    os.remove(i)
 
 	#Compiling the whole content...
+	text = text.replace('%3F','?')
 	trv = u"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">"+u"<html xmlns=\"http://www.w3.org/1999/xhtml\" dir=\"ltr\" lang=\"ru-RU\">"+u"<head profile=\"http://gmpg.org/xfn/11\">"+u"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>"+u"</head>"+u"<body>"+u"Троицкий вариант №"+catalogue+'\n'+text+u"</body>"+u"</html>"
 
 	#Writing HTML to file...
@@ -73,7 +80,7 @@ def trving(x):
 
 	#Deleting images...
 	listing = os.listdir('.')
-	listing_pics = [i for i in listing if i.endswith('.jpg') or i.endswith('.gif')]
+	listing_pics = [i for i in listing if i.endswith('.jpg') or i.endswith('.gif') or i.endswith('png')]
 	for i in listing_pics:
 	    os.remove(i)
 

@@ -261,11 +261,12 @@ _TAGS={
     #    return retv
 #except ImportError:
 try:
-    import tratata
+    import tratatasddf
     _IMG_LIB='wxPython'
     
     def convert2png(filename):
-        if wx.GetApp() is None:
+        #if wx.GetApp() is None:
+	if True:
             _app = wx.PySimpleApp()
         retv=''
         img = wx.Bitmap(filename, wx.BITMAP_TYPE_ANY)
@@ -276,7 +277,7 @@ try:
                 retv=open(of, 'rb').read()
             os.unlink(of)
         return retv
-except ImportError:
+except:
     try:    
 	from PIL import Image
 	_IMG_LIB='PIL'
