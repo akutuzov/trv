@@ -9,6 +9,7 @@ import codecs
 import os
 import subprocess
 import h2fb
+import wx
 
 def trving(x):
 	#Finding directory with articles...
@@ -39,8 +40,13 @@ def trving(x):
 	except:
 	    pass
 
-	#Creating list of pages to process...
 	listing = os.listdir('.')
+	listing_pics = [i for i in listing if '.jpg' in i or '.gif' in i or 'png' in i]
+	for pic in listing_pics:
+	    newname = pic.replace('%2C',',')
+	    os.rename(pic,newname)
+
+	#Creating list of pages to process...
 	listing_html = [i for i in listing if i.endswith('.html')]
 	listing_html = sorted(listing_html)
 
@@ -49,13 +55,14 @@ def trving(x):
 	for i in listing_html:
 	    page = codecs.open(i,'r','utf-8').read()
 	    results = ()
-	    results = re.search(ur'(<h1>.*?)addthis_',page,re.S)
+	    results = re.search(ur'(<h1>.*?)sharedaddy',page,re.S)
 	    article = results.group(1)[:-12]
 	    text = text+article
 	    os.remove(i)
 
 	#Compiling the whole content...
 	text = text.replace('%3F','?')
+	text = text.replace('%252C',',')
 	trv = u"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">"+u"<html xmlns=\"http://www.w3.org/1999/xhtml\" dir=\"ltr\" lang=\"ru-RU\">"+u"<head profile=\"http://gmpg.org/xfn/11\">"+u"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>"+u"</head>"+u"<body>"+u"Троицкий вариант №"+catalogue+'\n'+text+u"</body>"+u"</html>"
 
 	#Writing HTML to file...
@@ -79,8 +86,7 @@ def trving(x):
 	#print "Преобразование в fb2 завершено. Забирайте файл trv(дата выпуска).fb2 и наслаждайтесь."
 
 	#Deleting images...
-	listing = os.listdir('.')
-	listing_pics = [i for i in listing if i.endswith('.jpg') or i.endswith('.gif') or i.endswith('png')]
+	listing_pics = [i for i in listing if '.jpg' in i or '.gif' in i or 'png' in i]
 	for i in listing_pics:
 	    os.remove(i)
 

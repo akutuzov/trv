@@ -1,6 +1,6 @@
 #!/usr/bin/python2.3
 # -*- coding: utf-8 -*-
-
+import wx
 
 """
 HTML to FictionBook converter.
@@ -248,10 +248,10 @@ _TAGS={
     #_IMG_LIB='wxPython'
     
     #def convert2png(filename):
-    #    if wx.GetApp() is None:
-    #        _app = wx.PySimpleApp()
-    #    retv=''
-    #    img = wx.Bitmap(filename, wx.BITMAP_TYPE_ANY)
+    #if wx.GetApp() is None:
+    #_app = wx.PySimpleApp()
+    #retv=''
+    #img = wx.Bitmap(filename, wx.BITMAP_TYPE_ANY)
     #    if img.Ok():
     #        img = wx.ImageFromBitmap(img)
     #        of= tempfile.mktemp()
@@ -260,23 +260,24 @@ _TAGS={
     #        os.unlink(of)
     #    return retv
 #except ImportError:
+convert2png = None
 try:
-    import tratatasddf
-    _IMG_LIB='wxPython'
+    import tratatasddfsdfsdf
+#    _IMG_LIB='wxPython'
     
-    def convert2png(filename):
-        #if wx.GetApp() is None:
-	if True:
-            _app = wx.PySimpleApp()
-        retv=''
-        img = wx.Bitmap(filename, wx.BITMAP_TYPE_ANY)
-        if img.Ok():
-            img = wx.ImageFromBitmap(img)
-            of= tempfile.mktemp()
-            if img.SaveFile(of, wx.BITMAP_TYPE_PNG):
-                retv=open(of, 'rb').read()
-            os.unlink(of)
-        return retv
+#    def convert2png(filename):
+#        if wx.GetApp() is None:
+#	if True:
+#            _app = wx.PySimpleApp()
+#        retv=''
+#        img = wx.Bitmap(filename, wx.BITMAP_TYPE_ANY)
+#        if img.Ok():
+#            img = wx.ImageFromBitmap(img)
+#            of= tempfile.mktemp()
+#            if img.SaveFile(of, wx.BITMAP_TYPE_PNG):
+#                retv=open(of, 'rb').read()
+#            os.unlink(of)
+#        return retv
 except:
     try:    
 	from PIL import Image
