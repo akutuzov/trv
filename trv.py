@@ -15,11 +15,11 @@ def trving(x):
 	#Finding directory with articles...
 	catalogue = x[21:]
 	
-	os.chdir('/var/www/upload_data')
+	os.chdir('.') # Where to download files
 	
-	#Actually downloading pages...
-	subprocess.call(['wget', '-r', '-l 1','--restrict-file-names=nocontrol', '--include-directories=%s,uploads,trv-science.ru/uploads' % catalogue, '-nd', '-E', '--random-wait', '-np', '-p', '-k', '-H', x])
-
+	#Actually downloading files...
+	subprocess.call(['wget', '-r', '-l 2','--restrict-file-names=nocontrol', '--include-directories=%s,uploads,trv-science.ru/uploads' % catalogue, '-nd', '-E', '--random-wait', '-np', '-p', '-k', '-H', x])
+	
 	#Cleaning up a bit...
 	os.remove('index.html')
 	os.remove('index.html.1.html')
@@ -54,9 +54,11 @@ def trving(x):
 	text = ""
 	for i in listing_html:
 	    page = codecs.open(i,'r','utf-8').read()
-	    results = ()
-	    results = re.search(ur'(<h1>.*?)sharedaddy',page,re.S)
-	    article = results.group(1)[:-12]
+	    results = re.search(ur'(<h1>.*?)<div class="wp_rp_wrap',page,re.S)
+	    if results:
+		article = results.group(1)
+	    else:
+		article = ''
 	    text = text+article
 	    os.remove(i)
 
