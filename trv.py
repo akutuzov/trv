@@ -13,7 +13,7 @@ import h2fb
 
 def trving(x):
     # Finding directory with articles...
-    x = x.replace('https:','http:')
+    x = x.replace('https:', 'http:')
     catalogue = x[21:]
 
     os.chdir('.')
@@ -68,10 +68,12 @@ def trving(x):
             if title in titles:
                 continue
             else:
-                titles.add(title)
                 results = re.search(ur'(<header.*?)<div class="wp_rp_wrap', page, re.S)
                 if results:
                     article = results.group(1)
+                    article = article.replace('</div></p>', '</div>')
+                    article = article.replace(']</p></div>', ']</p></div><p>') + '</div>'
+                    titles.add(title)
                 else:
                     article = ''
                 text += article
