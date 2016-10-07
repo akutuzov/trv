@@ -1,7 +1,7 @@
 <application>
   <component name="FindSettings">
-    <option name="customScope" value="File '[LT4DH] - .../tagger.py'" />
-    <option name="defaultScopeName" value="File '[LT4DH] - .../tagger.py'" />
-    <option name="SEARCH_SCOPE" value="File '[LT4DH] - .../tagger.py'" />
+    <option name="customScope" value="File '[LT4DH] - .../code/dsm_genres/dsm_genres.py'" />
+    <option name="defaultScopeName" value="File '[LT4DH] - .../code/dsm_genres/dsm_genres.py'" />
+    <option name="SEARCH_SCOPE" value="File '[LT4DH] - .../code/dsm_genres/dsm_genres.py'" />
   </component>
 </application>
