@@ -68,7 +68,7 @@ def trving(x):
             if title in titles:
                 continue
             else:
-                results = re.search(ur'(<header.*?)<div class="wp_rp_wrap', page, re.S)
+                results = re.search(ur'(<header.*?)<div class="mistape_', page, re.S)
                 if results:
                     article = results.group(1)
                     article = article.replace('</div></p>', '</div>')
