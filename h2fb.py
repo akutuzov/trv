@@ -231,7 +231,7 @@ _TAGS={
     'tfoot'       : 0,
     'th'          : 0,
     'thead'       : 0,
-    'time'       : _TAG_SKIP,
+    'time'       : _TAG_NOTSKIP,
     'title'       : _TAG_NOTSKIP,
     'tr'          : _TAG_STARTP,
     'tt'          : 0,
