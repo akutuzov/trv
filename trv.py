@@ -8,7 +8,6 @@ import re
 import codecs
 import os
 import subprocess
-import h2fb
 
 
 def trving(x):
@@ -95,17 +94,10 @@ def trving(x):
     o = codecs.open(htmlname, 'w', 'utf-8')
     o.write(trv)
     o.close()
-    trv = codecs.open(htmlname, 'r', 'utf-8').read()
+    fb2name = htmlname.replace('.html', '.fb2')
 
     # Converting to FB2...
-    fb2name = 'trv' + catalogue + '.fb2'
-    params = h2fb.default_params.copy()
-    params['data'] = trv.encode('utf-8')
-    data = h2fb.MyHTMLParser().process(params)
-    text = data
-    fb2 = open(fb2name, 'w')
-    fb2.write(text)
-    fb2.close()
+    subprocess.call(['ebook-convert', htmlname, fb2name])
     # print "Преобразование в fb2 завершено. Забирайте файл trv(дата выпуска).fb2 и наслаждайтесь."
 
     # Deleting images...
