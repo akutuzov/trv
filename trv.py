@@ -1,6 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding: utf-8
-# author: Andrey Kutuzov; html2fb library by Chris Clark (https://code.google.com/p/html2fb/) is used
+# author: Andrey Kutuzov; Calibre e-book management tool (https://calibre-ebook.com/) is used
 # license: GNU GPL v3
 # Extracting TrV articles into one HTML and one FB2
 
@@ -18,9 +18,9 @@ def trving(x):
     os.chdir('.')
 
     # Actually downloading pages...
-    subprocess.call(['wget', '-r', '-l 1', '--restrict-file-names=nocontrol',
-                     '--include-directories=%s,uploads,trv-science.ru/uploads' % catalogue, '-nd', '-E',
-                     '--random-wait', '-np', '-p', '-k', '-H', x])
+    subprocess.call(['wget', '-r', '-l 0', '--restrict-file-names=nocontrol',
+                      '--include-directories=%s,uploads' % catalogue, '-nd', '-E',
+                      '--random-wait', '-np', '-p', '-k', '-H', '--reject-regex=.*/(print)|(feed)/.*', x])
 
     # Cleaning up a bit...
     os.remove('index.html')
@@ -46,7 +46,7 @@ def trving(x):
         pass
 
     listing = os.listdir('.')
-    listing_pics = [i for i in listing if '.jpg' in i or '.gif' in i or 'png' in i]
+    listing_pics = [i for i in listing if '.jpg' in i or '.gif' in i or '.png' in i or '.jpeg' in i]
     for pic in listing_pics:
         newname = pic.replace('%2C', ',')
         os.rename(pic, newname)
@@ -61,13 +61,13 @@ def trving(x):
     text = ""
     for i in listing_html:
         page = codecs.open(i, 'r', 'utf-8').read()
-        title = re.search(ur'<h1.*?>(.*?)</h1>', page, re.S)
+        title = re.search(r'<h1.*?>(.*?)</h1>', page, re.S)
         if title:
             title = title.group(1).strip()
             if title in titles:
                 continue
             else:
-                results = re.search(ur'(<header.*?)<div class="mistape_', page, re.S)
+                results = re.search(r'(<header.*?)<div class="mistape_', page, re.S)
                 if results:
                     article = results.group(1)
                     article = article.replace('</div></p>', '</div>')
@@ -94,6 +94,7 @@ def trving(x):
     o = codecs.open(htmlname, 'w', 'utf-8')
     o.write(trv)
     o.close()
+    #trv = codecs.open(htmlname, 'r', 'utf-8').read()
     fb2name = htmlname.replace('.html', '.fb2')
 
     # Converting to FB2...
@@ -101,7 +102,7 @@ def trving(x):
     # print "Преобразование в fb2 завершено. Забирайте файл trv(дата выпуска).fb2 и наслаждайтесь."
 
     # Deleting images...
-    listing_pics = [i for i in listing if '.jpg' in i or '.gif' in i or 'png' in i]
+    listing_pics = [i for i in listing if '.jpg' in i or '.gif' in i or '.png' in i or '.jpeg' in i]
     for i in listing_pics:
         os.remove(i)
 
