@@ -112,4 +112,5 @@ def trving(x):
     for i in listing_html:
         os.remove(i)
 
-    subprocess.call(['gzip', fb2name])
+    subprocess.call(['zip', fb2name+'.zip', fb2name])
+    os.remove(fb2name)
