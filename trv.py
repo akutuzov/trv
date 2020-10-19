@@ -12,23 +12,38 @@ import subprocess
 
 def trving(x):
     # Finding directory with articles...
-    x = x.replace('https:', 'http:')
-    catalogue = x[21:]
+    x = x.replace("https:", "http:")
+    catalogue_name = x[21:]
+    catalogue = x[21:-3]
 
-    os.chdir('.')
+    os.chdir(".")
 
     # Actually downloading pages...
-    subprocess.call(['wget', '-r', '-l 0', '--restrict-file-names=nocontrol',
-                      '--include-directories=%s,uploads' % catalogue, '-nd', '-E',
-                      '--random-wait', '-np', '-p', '-k', '-H', '--reject-regex=.*/(print)|(feed)/.*', x])
+    subprocess.call(
+        [
+            "wget",
+            "-r",
+            "-l 0",
+            "--restrict-file-names=nocontrol",
+            "--include-directories=%s,uploads" % catalogue,
+            "-nd",
+            "-E",
+            "--random-wait",
+            "-p",
+            "-k",
+            "-H",
+            "--reject-regex=.*/(print)|(feed)|(replytocom).*",
+            x,
+        ]
+    )
 
     # Cleaning up a bit...
-    os.remove('index.html')
+    os.remove("index.html")
     try:
-        os.remove('index.html.1.html')
-    except:
+        os.remove("index.html.1.html")
+    except FileNotFoundError:
         pass
-    os.remove('robots.txt')
+    os.remove("robots.txt")
     os.rename("index.html.1.1.html", "index.html.1.01.html")
     os.rename("index.html.1.2.html", "index.html.1.02.html")
     os.rename("index.html.1.3.html", "index.html.1.03.html")
@@ -38,79 +53,91 @@ def trving(x):
     os.rename("index.html.1.7.html", "index.html.1.07.html")
     try:
         os.rename("index.html.1.8.html", "index.html.1.08.html")
-    except:
+    except FileNotFoundError:
         pass
     try:
         os.rename("index.html.1.9.html", "index.html.1.09.html")
-    except:
+    except FileNotFoundError:
         pass
 
-    listing = os.listdir('.')
-    listing_pics = [i for i in listing if '.jpg' in i or '.gif' in i or '.png' in i or '.jpeg' in i]
+    listing = os.listdir(".")
+    listing_pics = [i for i in listing if ".jpg" in i or ".gif" in i or "png" in i]
     for pic in listing_pics:
-        newname = pic.replace('%2C', ',')
+        newname = pic.replace("%2C", ",")
         os.rename(pic, newname)
-    listing = os.listdir('.')
+    listing = os.listdir(".")
 
     # Creating list of pages to process...
-    listing_html = [i for i in listing if i.endswith('.html')]
+    listing_html = [i for i in listing if i.endswith(".html")]
     listing_html = sorted(listing_html)
 
     # Extracting articles themselves...
     titles = set()
     text = ""
     for i in listing_html:
-        page = codecs.open(i, 'r', 'utf-8').read()
-        title = re.search(r'<h1.*?>(.*?)</h1>', page, re.S)
+        page = codecs.open(i, "r", "utf-8").read()
+        title = re.search(r"<h1.*?>(.*?)</h1>", page, re.S)
         if title:
             title = title.group(1).strip()
             if title in titles:
                 continue
             else:
-                results = re.search(r'(<header.*?)<div class="mistape_', page, re.S)
+                results = re.search(
+                    r'(<header class="entry-header.*?)<div class="mistape_', page, re.S
+                )
                 if results:
                     article = results.group(1)
-                    article = article.replace('</div></p>', '</div>')
-                    article = article.replace(']</p></div>', ']</p></div><p>') + '</div>'
+                    # article = article.replace('</div></p>', '</div>')
+                    # article = article.replace(']</p></div>', ']</p></div><p>') + '</div>'
                     titles.add(title)
                 else:
-                    article = ''
-                text += article
+                    article = ""
+                text += article + "\n<br/>"
         os.remove(i)
 
     # Compiling the whole content...
-    text = text.replace('%3F', '?')
-    text = text.replace('%252C', ',')
-    trv = u"<!DOCTYPE html PUBLIC \"-//W3C//DTD " \
-          u"XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" \
-          + u"<html xmlns=\"http://www.w3.org/1999/xhtml\" dir=\"ltr\" lang=\"ru-RU\">" \
-          + u"<head profile=\"http://gmpg.org/xfn/11\">" \
-          + u"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>" \
-          + u"</head>" + u"<body>" + u"Троицкий вариант №" + catalogue + '\n' + text + u"</body>" + u"</html>"
+    text = text.replace("%3F", "?")
+    text = text.replace("%252C", ",")
+    trv = (
+        u'<!DOCTYPE html PUBLIC "-//W3C//DTD '
+        u'XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
+        + u'<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="ru-RU">'
+        + u'<head profile="http://gmpg.org/xfn/11">'
+        + u'<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>'
+        + u"</head>"
+        + u"<body>"
+        + u"Троицкий вариант №"
+        + catalogue
+        + "\n"
+        + text
+        + u"</body>"
+        + u"</html>"
+    )
 
     # Writing HTML to file...
-    catalogue = catalogue.replace('/', '-')[:-1]
-    htmlname = 'trv' + catalogue + '.html'
-    o = codecs.open(htmlname, 'w', 'utf-8')
+    catalogue = catalogue_name.replace("/", "-")[:-1]
+    htmlname = "trv" + catalogue + ".html"
+    o = codecs.open(htmlname, "w", "utf-8")
     o.write(trv)
     o.close()
-    #trv = codecs.open(htmlname, 'r', 'utf-8').read()
-    fb2name = htmlname.replace('.html', '.fb2')
+    fb2name = htmlname.replace(".html", ".fb2")
 
     # Converting to FB2...
-    subprocess.call(['ebook-convert', htmlname, fb2name])
+    subprocess.call(["ebook-convert", htmlname, fb2name])
     # print "Преобразование в fb2 завершено. Забирайте файл trv(дата выпуска).fb2 и наслаждайтесь."
 
     # Deleting images...
-    listing_pics = [i for i in listing if '.jpg' in i or '.gif' in i or '.png' in i or '.jpeg' in i]
+    listing_pics = [
+        i for i in listing if ".jpg" in i or ".gif" in i or ".png" in i or ".jpeg" in i
+    ]
     for i in listing_pics:
         os.remove(i)
 
     # Deleting html...
-    listing = os.listdir('.')
-    listing_html = [i for i in listing if '.html' in i]
+    listing = os.listdir(".")
+    listing_html = [i for i in listing if ".html" in i]
     for i in listing_html:
         os.remove(i)
 
-    subprocess.call(['zip', fb2name+'.zip', fb2name])
+    subprocess.call(["zip", fb2name + ".zip", fb2name])
     os.remove(fb2name)
